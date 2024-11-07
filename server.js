@@ -14,16 +14,18 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT;
 
+// Enable CORS for all origins
+app.use(cors()); // This will allow requests from any origin
+
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb" }));
-
-app.use(cors());
 
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.log("MongoDB connection error: ", err));
 
+// Route middlewares
 app.use("/api", userRoutes);
 app.use("/api", uploadRoutes);
 app.use("/api", leaderboardRoutes);
@@ -36,5 +38,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log("Server is running");
+  console.log("Server is running on port", PORT);
 });
